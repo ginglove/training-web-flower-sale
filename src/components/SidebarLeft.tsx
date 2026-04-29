@@ -115,5 +115,3 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
     </aside>
   );
 }
-  );
-}
