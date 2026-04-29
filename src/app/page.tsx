@@ -2,6 +2,7 @@ import Link from "next/link";
 import sql from "@/lib/db";
 import SidebarLeft from "@/components/SidebarLeft";
 import SidebarRight from "@/components/SidebarRight";
+import ProductCard from "@/components/ProductCard";
 
 export const dynamic = 'force-dynamic';
 
