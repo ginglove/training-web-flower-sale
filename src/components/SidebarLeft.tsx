@@ -99,19 +99,6 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
         </ul>
       </div>
 
-      {/* SHOPPING CART LINK */}
-      <div className="pt-4 mb-4">
-        <Link 
-          href="/gio-hang" 
-          className="flex items-center gap-4 px-6 py-4 rounded-3xl nm-button group transition-all"
-        >
-          <div className="w-8 h-8 nm-inset rounded-lg flex items-center justify-center text-sage group-hover:scale-110 transition-transform">
-            <ShoppingBag size={16} />
-          </div>
-          <span className="text-[10px] font-black text-text-main uppercase tracking-widest">Giỏ hàng của bạn</span>
-        </Link>
-      </div>
-
     </aside>
   );
 }
