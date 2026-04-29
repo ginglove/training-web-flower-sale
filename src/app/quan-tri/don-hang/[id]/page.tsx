@@ -31,8 +31,10 @@ export default async function OrderDetailPage({ params }: { params: { id: string
 
   const totalValue = items.reduce((sum, item) => sum + (item.gia_ban * item.sl_dat), 0);
 
-  // Bind the action
-  const confirmDelivery = updateOrderStatus.bind(null, ma_dh, 1);
+  // Bind the action and wrap it to return void for TypeScript compliance
+  const handleConfirmDelivery = async () => {
+    await updateOrderStatus(ma_dh, 1);
+  };
 
   return (
     <div className="max-w-6xl mx-auto space-y-12 pb-20">
@@ -168,7 +170,7 @@ export default async function OrderDetailPage({ params }: { params: { id: string
                             </p>
                         </div>
                         {order.hien_trang === 0 ? (
-                            <form action={confirmDelivery}>
+                            <form action={handleConfirmDelivery}>
                                 <button className="nm-button-sage px-10 py-5 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white hover:scale-105 transition-transform flex items-center gap-3">
                                     <CheckCircle size={18} /> Xác nhận đã giao
                                 </button>

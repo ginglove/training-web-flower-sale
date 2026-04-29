@@ -1,7 +1,8 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/request';
 
-export function middleware(request: NextRequest) {
+// Migrated from middleware to proxy convention as per Next.js deprecation notice
+export function proxy(request: NextRequest) {
   const url = new URL(request.url);
   const requestHeaders = new Headers(request.headers);
   requestHeaders.set('x-pathname', url.pathname);
