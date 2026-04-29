@@ -75,17 +75,17 @@ export default function CartDisplay() {
             </div>
             
             {/* Tên Hàng - Expanded column */}
-            <div className="col-span-5 flex items-center gap-4">
+            <div className="col-span-5 flex items-center gap-5">
               <div className="w-14 h-14 lg:w-16 lg:h-16 nm-inset p-1 rounded-2xl overflow-hidden flex-shrink-0">
                 <img src={item.hinh_anh} alt={item.ten_hoa} className="w-full h-full object-cover rounded-xl" />
               </div>
-              <div className="min-w-0 flex-1">
-                <h4 className="font-bold text-text-main text-sm lg:text-base leading-tight line-clamp-2 whitespace-normal">
+              <div className="flex-1 min-w-0">
+                <h4 className="font-bold text-slate-900 text-sm lg:text-lg leading-tight break-words">
                   {item.ten_hoa}
                 </h4>
                 <button 
                   onClick={() => removeItem(item.ma_hoa)} 
-                  className="text-[9px] font-black text-red-400 uppercase tracking-widest mt-2 hover:text-red-500 transition-colors flex items-center gap-1"
+                  className="text-[9px] font-black text-red-500 uppercase tracking-widest mt-2 hover:text-red-600 transition-colors flex items-center gap-1 bg-white/50 px-2 py-1 rounded-lg w-fit nm-raised-sm"
                 >
                   <Trash2 size={10} /> [Xóa]
                 </button>
