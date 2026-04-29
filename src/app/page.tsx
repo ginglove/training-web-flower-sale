@@ -90,42 +90,7 @@ export default async function Home() {
           {/* Product Grid - Expert Variation */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
             {products.map((p, idx) => (
-              <div 
-                key={p.ma_hoa} 
-                className={`flex flex-col group ${idx % 2 !== 0 ? 'md:mt-12' : ''}`}
-              >
-                <div className="nm-raised rounded-[50px] p-3 overflow-hidden aspect-[4/5] relative bg-white/50">
-                  {p.hinh_anh ? (
-                    <img 
-                      src={p.hinh_anh} 
-                      alt={p.ten_hoa} 
-                      className="w-full h-full object-cover rounded-[40px] group-hover:scale-110 transition-transform duration-700 bg-sage/5" 
-                      onError={(e) => {
-                        (e.target as HTMLImageElement).style.display = 'none';
-                        (e.target as HTMLImageElement).parentElement?.classList.add('bg-sage/10');
-                      }}
-                    />
-                  ) : (
-                    <div className="w-full h-full bg-sage/10 rounded-[40px] flex items-center justify-center">
-                        <span className="text-4xl opacity-20">🌿</span>
-                    </div>
-                  )}
-                  <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-                    <button className="nm-raised-sm w-12 h-12 rounded-full flex items-center justify-center bg-white/90 text-xl hover:bg-sage hover:text-white transition-colors">
-                      🛒
-                    </button>
-                  </div>
-                </div>
-                <div className="mt-8 px-4 text-center">
-                  <span className="text-[10px] font-black uppercase tracking-widest text-sage mb-2 block">{p.ten_loai}</span>
-                  <h3 className="font-serif text-2xl font-bold text-text-main mb-2 hover:text-sage transition-colors cursor-pointer">
-                    {p.ten_hoa}
-                  </h3>
-                  <p className="text-text-main font-black tracking-tighter">
-                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(p.gia)}
-                  </p>
-                </div>
-              </div>
+              <ProductCard key={p.ma_hoa} product={p} index={idx} />
             ))}
           </div>
 
