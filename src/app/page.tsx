@@ -94,12 +94,22 @@ export default async function Home() {
                 key={p.ma_hoa} 
                 className={`flex flex-col group ${idx % 2 !== 0 ? 'md:mt-12' : ''}`}
               >
-                <div className="nm-raised rounded-[50px] p-3 overflow-hidden aspect-[4/5] relative">
-                  <img 
-                    src={p.hinh_anh} 
-                    alt={p.ten_hoa} 
-                    className="w-full h-full object-cover rounded-[40px] group-hover:scale-110 transition-transform duration-700" 
-                  />
+                <div className="nm-raised rounded-[50px] p-3 overflow-hidden aspect-[4/5] relative bg-white/50">
+                  {p.hinh_anh ? (
+                    <img 
+                      src={p.hinh_anh} 
+                      alt={p.ten_hoa} 
+                      className="w-full h-full object-cover rounded-[40px] group-hover:scale-110 transition-transform duration-700 bg-sage/5" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none';
+                        (e.target as HTMLImageElement).parentElement?.classList.add('bg-sage/10');
+                      }}
+                    />
+                  ) : (
+                    <div className="w-full h-full bg-sage/10 rounded-[40px] flex items-center justify-center">
+                        <span className="text-4xl opacity-20">🌿</span>
+                    </div>
+                  )}
                   <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                     <button className="nm-raised-sm w-12 h-12 rounded-full flex items-center justify-center bg-white/90 text-xl hover:bg-sage hover:text-white transition-colors">
                       🛒
