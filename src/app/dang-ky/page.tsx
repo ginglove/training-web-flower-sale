@@ -39,9 +39,11 @@ export default function RegisterPage() {
     const newErrors: Partial<Record<FormFields, string>> = {};
     
     if (!formData.ten_dn) newErrors.ten_dn = 'Vui lòng nhập tên đăng nhập';
+    else if (formData.ten_dn.length < 11) newErrors.ten_dn = 'Tên đăng nhập phải tối thiểu 11 ký tự';
     else if (formData.ten_dn.length > 30) newErrors.ten_dn = 'Tối đa 30 ký tự';
 
     if (!formData.mat_khau) newErrors.mat_khau = 'Vui lòng nhập mật khẩu';
+    else if (formData.mat_khau.length < 11) newErrors.mat_khau = 'Mật khẩu phải tối thiểu 11 ký tự';
     else if (formData.mat_khau.length > 30) newErrors.mat_khau = 'Tối đa 30 ký tự';
 
     if (!formData.ho) newErrors.ho = 'Vui lòng nhập họ';
@@ -52,6 +54,7 @@ export default function RegisterPage() {
 
     if (!formData.sdt) newErrors.sdt = 'Vui lòng nhập số điện thoại';
     else if (!formData.sdt.startsWith('0')) newErrors.sdt = 'Phải bắt đầu bằng số 0';
+    else if (formData.sdt.length < 9) newErrors.sdt = 'Số điện thoại phải tối thiểu 9 số';
     else if (formData.sdt.length > 12) newErrors.sdt = 'Tối đa 12 số';
     else if (!/^\d+$/.test(formData.sdt)) newErrors.sdt = 'Chỉ được chứa chữ số';
 
@@ -178,14 +181,14 @@ export default function RegisterPage() {
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <User size={12} /> Tên Đăng Nhập <span className="text-red-500">(*)</span>
               </label>
-              <input type="text" name="ten_dn" value={formData.ten_dn} onChange={handleChange} className={inputClasses('ten_dn')} placeholder="HungNX" maxLength={30} />
+              <input type="text" name="ten_dn" value={formData.ten_dn} onChange={handleChange} className={inputClasses('ten_dn')} placeholder="HungNX" minLength={11} maxLength={30} />
               <ErrorMessage message={errors.ten_dn} />
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-1">
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <Lock size={12} /> Mật Khẩu <span className="text-red-500">(*)</span>
               </label>
-              <input type="password" name="mat_khau" value={formData.mat_khau} onChange={handleChange} className={inputClasses('mat_khau')} placeholder="••••••••" maxLength={30} />
+              <input type="password" name="mat_khau" value={formData.mat_khau} onChange={handleChange} className={inputClasses('mat_khau')} placeholder="••••••••" minLength={11} maxLength={30} />
               <ErrorMessage message={errors.mat_khau} />
             </motion.div>
           </div>
@@ -208,7 +211,7 @@ export default function RegisterPage() {
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <Phone size={12} /> Số Điện Thoại <span className="text-red-500">(*)</span>
               </label>
-              <input type="tel" name="sdt" value={formData.sdt} onChange={handleChange} className={inputClasses('sdt')} placeholder="0912345678" maxLength={12} />
+              <input type="tel" name="sdt" value={formData.sdt} onChange={handleChange} className={inputClasses('sdt')} placeholder="0912345678" minLength={9} maxLength={12} />
               <ErrorMessage message={errors.sdt} />
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-1">

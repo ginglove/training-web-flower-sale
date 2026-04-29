@@ -1,8 +1,9 @@
 "use client";
 
-import { Flower2, Tag, DollarSign, Image as ImageIcon, AlignLeft, Eye, Undo2, Save } from 'lucide-react';
+import { Flower2, Tag, DollarSign, Image as ImageIcon, AlignLeft, Eye, Undo2, Save, AlertCircle } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { addProduct, updateProduct } from '@/app/actions/product';
 import NotificationModal from '@/components/NotificationModal';
 
@@ -20,8 +21,47 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
     message: '',
     type: 'success'
   });
+  const [fieldErrors, setFieldErrors] = useState<{ [key: string]: string }>({});
+
+  const validateForm = (formData: FormData) => {
+    const errors: { [key: string]: string } = {};
+    const ten_hoa = formData.get('ten_hoa') as string;
+    const gia = Number(formData.get('gia'));
+    const mo_ta = formData.get('mo_ta') as string;
+
+    if (!ten_hoa) errors.ten_hoa = "Tên hoa không được để trống";
+    else if (ten_hoa.length < 5) errors.ten_hoa = "Tên hoa phải có ít nhất 5 ký tự";
+    else if (ten_hoa.length > 20) errors.ten_hoa = "Tên hoa không được quá 20 ký tự";
+
+    if (!gia) errors.gia = "Vui lòng nhập giá bán";
+    else if (gia < 5000) errors.gia = "Giá bán tối thiểu là 5.000đ";
+    else if (gia > 7000000) errors.gia = "Giá bán tối đa là 7.000.000đ";
+
+    if (!mo_ta) errors.mo_ta = "Vui lòng nhập mô tả chi tiết";
+    else if (mo_ta.length > 250) errors.mo_ta = "Mô tả không được quá 250 ký tự";
+
+    setFieldErrors(errors);
+    return Object.keys(errors).length === 0;
+  };
+
+  const ErrorDisplay = ({ message }: { message?: string }) => (
+    <AnimatePresence>
+      {message && (
+        <motion.div 
+          initial={{ opacity: 0, x: -10 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: 10 }}
+          className="flex items-center gap-2 text-red-500 text-[9px] font-black mt-2 ml-6 uppercase tracking-widest"
+        >
+          <AlertCircle size={10} /> {message}
+        </motion.div>
+      )}
+    </AnimatePresence>
+  );
 
   async function handleSubmit(formData: FormData) {
+    if (!validateForm(formData)) return;
+    
     setLoading(true);
     let result;
     
@@ -63,7 +103,7 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
         onClose={() => setNotification({ ...notification, isOpen: false })}
       />
 
-      <form action={handleSubmit} className="space-y-12">
+      <form noValidate action={handleSubmit} className="space-y-12">
         {/* Main Info Row */}
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
@@ -75,9 +115,12 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
               type="text" 
               defaultValue={initialData?.ten_hoa || ''}
               placeholder="Ví dụ: Ánh Dương Rực Rỡ" 
-              className="w-full nm-inset px-8 py-5 rounded-3xl outline-none text-sm text-text-main placeholder:opacity-30" 
+              className={`w-full nm-inset px-8 py-5 rounded-3xl outline-none text-sm text-text-main placeholder:opacity-30 transition-all ${fieldErrors.ten_hoa ? 'border-2 border-red-200 shadow-[inset_4px_4px_8px_#feb2b2,inset_-4px_-4px_8px_#ffffff]' : 'border border-transparent focus:shadow-inner'}`}
+              minLength={5}
+              maxLength={20}
               required 
             />
+            <ErrorDisplay message={fieldErrors.ten_hoa} />
           </div>
 
           <div className="space-y-4">
@@ -107,9 +150,12 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
               type="number" 
               defaultValue={initialData?.gia || ''}
               placeholder="Ví dụ: 500000" 
-              className="w-full nm-inset px-8 py-5 rounded-3xl outline-none text-sm text-text-main" 
+              className={`w-full nm-inset px-8 py-5 rounded-3xl outline-none text-sm text-text-main transition-all ${fieldErrors.gia ? 'border-2 border-red-200 shadow-[inset_4px_4px_8px_#feb2b2,inset_-4px_-4px_8px_#ffffff]' : 'border border-transparent focus:shadow-inner'}`}
+              min={5000}
+              max={7000000}
               required 
             />
+            <ErrorDisplay message={fieldErrors.gia} />
           </div>
 
           <div className="space-y-4">
@@ -137,9 +183,11 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
             rows={5} 
             defaultValue={initialData?.mo_ta || ''}
             placeholder="Mô tả vẻ đẹp, ý nghĩa và cách chăm sóc loại hoa này..." 
-            className="w-full nm-inset px-8 py-6 rounded-[40px] outline-none text-sm text-text-main resize-none"
+            className={`w-full nm-inset px-8 py-6 rounded-[40px] outline-none text-sm text-text-main resize-none transition-all ${fieldErrors.mo_ta ? 'border-2 border-red-200 shadow-[inset_4px_4px_8px_#feb2b2,inset_-4px_-4px_8px_#ffffff]' : 'border border-transparent focus:shadow-inner'}`}
+            maxLength={250}
             required
           ></textarea>
+          <ErrorDisplay message={fieldErrors.mo_ta} />
         </div>
 
         {/* Image URL */}

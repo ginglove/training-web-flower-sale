@@ -33,11 +33,11 @@ export async function POST(request: Request) {
     const final_ten = (ten || ten_kh || '').toString().trim();
 
     // 1. Validation Logic
-    if (!ten_dn || ten_dn.length > 30) {
-      return NextResponse.json({ error: 'Tên đăng nhập không được để trống và không quá 30 ký tự' }, { status: 400 });
+    if (!ten_dn || ten_dn.length < 11 || ten_dn.length > 30) {
+      return NextResponse.json({ error: 'Tên đăng nhập phải từ 11 đến 30 ký tự' }, { status: 400 });
     }
-    if (!mat_khau || mat_khau.length > 30) {
-      return NextResponse.json({ error: 'Mật khẩu không được để trống và không quá 30 ký tự' }, { status: 400 });
+    if (!mat_khau || mat_khau.length < 11 || mat_khau.length > 30) {
+      return NextResponse.json({ error: 'Mật khẩu phải từ 11 đến 30 ký tự' }, { status: 400 });
     }
     if (!final_ho || !final_ten) {
       return NextResponse.json({ error: 'Họ và tên không được để trống' }, { status: 400 });
@@ -45,8 +45,8 @@ export async function POST(request: Request) {
     if (/\d/.test(final_ho) || /\d/.test(final_ten)) {
       return NextResponse.json({ error: 'Họ và tên không được chứa chữ số' }, { status: 400 });
     }
-    if (!sdt || !sdt.startsWith('0') || sdt.length > 12 || !/^\d+$/.test(sdt)) {
-      return NextResponse.json({ error: 'Số điện thoại không hợp lệ (phải bắt đầu bằng 0, tối đa 12 chữ số)' }, { status: 400 });
+    if (!sdt || !sdt.startsWith('0') || sdt.length < 9 || sdt.length > 12 || !/^\d+$/.test(sdt)) {
+      return NextResponse.json({ error: 'Số điện thoại không hợp lệ (phải từ 9-12 số và bắt đầu bằng 0)' }, { status: 400 });
     }
     if (!email || email.length > 50 || !/^\S+@\S+\.\S+$/.test(email)) {
       return NextResponse.json({ error: 'Email không hợp lệ và không quá 50 ký tự' }, { status: 400 });

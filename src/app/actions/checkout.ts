@@ -14,7 +14,7 @@ export async function processCheckout(formData: any, cart: any[]) {
     const customerId = userData?.id || 1; 
 
     const noiGiao = formData.diaChiGiaoHang;
-    const ngayGH = formData.ngayGiaoHang;
+    const ngayGH = formData.ngayGiaoHang || new Date();
 
     // 1. Create Order
     const orderResult = await sql`

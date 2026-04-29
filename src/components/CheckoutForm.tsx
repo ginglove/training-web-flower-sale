@@ -3,11 +3,15 @@
 import { useState, useEffect } from 'react';
 import { CreditCard, Truck, Calendar, User, CheckCircle2 } from 'lucide-react';
 import { processCheckout } from '@/app/actions/checkout';
+import ConfirmModal from '@/components/ConfirmModal';
+import { useRef } from 'react';
 
 export default function CheckoutForm() {
   const [cart, setCart] = useState<any[]>([]);
   const [isOrdered, setIsOrdered] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [isConfirmOpen, setIsConfirmOpen] = useState(false);
+  const formRef = useRef<HTMLFormElement>(null);
 
   useEffect(() => {
     const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
@@ -16,13 +20,19 @@ export default function CheckoutForm() {
 
   const total = cart.reduce((sum, item) => sum + (item.gia * item.quantity), 0);
 
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (cart.length === 0) return;
+    setIsConfirmOpen(true);
+  };
+
+  const handleFinalSubmit = async () => {
+    if (!formRef.current) return;
     
     setLoading(true);
+    setIsConfirmOpen(false);
     
-    const formData = new FormData(e.currentTarget);
+    const formData = new FormData(formRef.current);
     const data = {
       tenKhach: formData.get('tenKhach'),
       email: formData.get('email'),
@@ -61,6 +71,13 @@ export default function CheckoutForm() {
 
   return (
     <div className="nm-raised rounded-[50px] overflow-hidden">
+      <ConfirmModal 
+        isOpen={isConfirmOpen}
+        onClose={() => setIsConfirmOpen(false)}
+        onConfirm={handleFinalSubmit}
+        title="Xác nhận đơn hàng"
+        message="Bạn có chắc chắn muốn đặt đơn hàng này không? Vui lòng kiểm tra kỹ thông tin giao hàng."
+      />
       <div className="bg-[#2D3436] px-10 py-8 text-white flex items-center justify-between">
         <div>
           <h1 className="font-serif text-3xl font-bold">Thanh Toán</h1>
@@ -72,7 +89,7 @@ export default function CheckoutForm() {
         </div>
       </div>
 
-      <form onSubmit={handleSubmit} className="p-12 grid md:grid-cols-2 gap-16">
+      <form ref={formRef} onSubmit={handleSubmit} className="p-12 grid md:grid-cols-2 gap-16">
         {/* Left Column: Customer Info */}
         <div className="space-y-12">
           <div className="space-y-8">
@@ -118,7 +135,13 @@ export default function CheckoutForm() {
               <div className="space-y-2">
                 <label className="text-[9px] font-black text-text-muted uppercase tracking-widest ml-4">Ngày Giao Hàng</label>
                 <div className="relative">
-                  <input name="ngayGiaoHang" type="date" className="w-full nm-inset px-6 py-4 rounded-2xl outline-none text-sm text-text-main appearance-none" required />
+                  <input 
+                    name="ngayGiaoHang" 
+                    type="date" 
+                    defaultValue={new Date().toISOString().split('T')[0]}
+                    className="w-full nm-inset px-6 py-4 rounded-2xl outline-none text-sm text-text-main appearance-none" 
+                    required 
+                  />
                   <Calendar size={18} className="absolute right-6 top-1/2 -translate-y-1/2 text-text-muted pointer-events-none" />
                 </div>
               </div>

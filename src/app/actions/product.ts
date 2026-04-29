@@ -12,8 +12,15 @@ export async function addProduct(formData: FormData) {
     const mo_ta = formData.get('mo_ta') as string;
     const hinh_anh = formData.get('hinh_anh') as string;
 
-    if (!ten_hoa || !ma_loai || isNaN(gia) || !mo_ta) {
-      return { success: false, error: "Vui lòng điền đầy đủ các trường bắt buộc: Tên, Loại, Giá và Mô tả." };
+    // 1. Validation Logic
+    if (!ten_hoa || ten_hoa.length < 5 || ten_hoa.length > 20) {
+      return { success: false, error: "Tên hoa phải từ 5 đến 20 ký tự" };
+    }
+    if (!gia || gia < 5000 || gia > 7000000) {
+      return { success: false, error: "Giá bán phải từ 5.000đ đến 7.000.000đ" };
+    }
+    if (!mo_ta || mo_ta.length > 250) {
+      return { success: false, error: "Mô tả không được để trống và không quá 250 ký tự" };
     }
 
     await sql`
@@ -40,8 +47,14 @@ export async function updateProduct(ma_hoa: number, formData: FormData) {
     const mo_ta = formData.get('mo_ta') as string;
     const hinh_anh = formData.get('hinh_anh') as string;
 
-    if (!ten_hoa || !ma_loai || isNaN(gia) || !mo_ta) {
-      return { success: false, error: "Vui lòng điền đầy đủ các trường bắt buộc: Tên, Loại, Giá và Mô tả." };
+    if (!ten_hoa || ten_hoa.length < 5 || ten_hoa.length > 20) {
+      return { success: false, error: "Tên hoa phải từ 5 đến 20 ký tự" };
+    }
+    if (!gia || gia < 5000 || gia > 7000000) {
+      return { success: false, error: "Giá bán phải từ 5.000đ đến 7.000.000đ" };
+    }
+    if (!mo_ta || mo_ta.length > 250) {
+      return { success: false, error: "Mô tả không được để trống và không quá 250 ký tự" };
     }
 
     await sql`
