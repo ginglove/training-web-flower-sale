@@ -11,11 +11,13 @@ if (!dbUrl || dbUrl.trim() === '') {
   throw new Error(errorMsg);
 }
 
+const isLocal = dbUrl.includes('localhost') || dbUrl.includes('127.0.0.1');
+
 const sql = globalForSql.sql || postgres(dbUrl, {
   max: 10,
   idle_timeout: 30,
   connect_timeout: 30,
-  ssl: 'require', // Force SSL for Neon/Cloud DBs
+  ssl: isLocal ? false : 'require', 
 });
 
 if (process.env.NODE_ENV !== 'production') globalForSql.sql = sql;

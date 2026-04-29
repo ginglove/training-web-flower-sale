@@ -55,9 +55,12 @@ export async function POST(request: Request) {
     });
 
     return response;
-  } catch (error) {
-    console.error('Login error:', error);
+  } catch (error: any) {
+    console.error('CRITICAL LOGIN ERROR:', error);
     if (isForm) return NextResponse.redirect(new URL(referer.split('?')[0] + '?error=server', request.url));
-    return NextResponse.json({ error: 'Lỗi hệ thống' }, { status: 500 });
+    return NextResponse.json({ 
+      error: 'Lỗi hệ thống. Vui lòng thử lại.',
+      details: process.env.NODE_ENV === 'development' ? error.message : undefined
+    }, { status: 500 });
   }
 }

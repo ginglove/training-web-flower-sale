@@ -68,7 +68,7 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
-              <Flower2 size={12} className="text-sage" /> Tên Hoa
+              <Flower2 size={12} className="text-sage" /> Tên Hoa <span className="text-red-400 font-bold ml-1">* (Bắt buộc)</span>
             </label>
             <input 
               name="ten_hoa" 
@@ -100,7 +100,7 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
         <div className="grid md:grid-cols-2 gap-12">
           <div className="space-y-4">
             <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
-              <DollarSign size={12} className="text-sage" /> Giá Bán (VNĐ)
+              <DollarSign size={12} className="text-sage" /> Giá Bán (VNĐ) <span className="text-red-400 font-bold ml-1">* (Bắt buộc)</span>
             </label>
             <input 
               name="gia" 
@@ -130,7 +130,7 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
         {/* Description */}
         <div className="space-y-4">
           <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
-            <AlignLeft size={12} className="text-sage" /> Mô Tả Chi Tiết
+            <AlignLeft size={12} className="text-sage" /> Mô Tả Chi Tiết <span className="text-red-400 font-bold ml-1">* (Bắt buộc)</span>
           </label>
           <textarea 
             name="mo_ta" 
@@ -138,6 +138,7 @@ export default function ProductForm({ categories, initialData, mode }: ProductFo
             defaultValue={initialData?.mo_ta || ''}
             placeholder="Mô tả vẻ đẹp, ý nghĩa và cách chăm sóc loại hoa này..." 
             className="w-full nm-inset px-8 py-6 rounded-[40px] outline-none text-sm text-text-main resize-none"
+            required
           ></textarea>
         </div>
 

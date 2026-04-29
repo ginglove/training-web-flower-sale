@@ -29,12 +29,30 @@ export async function POST(request: Request) {
       captcha
     } = data;
 
-    const final_ho = ho || ho_kh;
-    const final_ten = ten || ten_kh;
+    const final_ho = (ho || ho_kh || '').toString().trim();
+    const final_ten = (ten || ten_kh || '').toString().trim();
 
-    // 1. Basic Required Field Check
-    if (!ten_dn || !mat_khau || !email || !sdt) {
-      return NextResponse.json({ error: 'Vui lòng điền đầy đủ các thông tin bắt buộc' }, { status: 400 });
+    // 1. Validation Logic
+    if (!ten_dn || ten_dn.length > 30) {
+      return NextResponse.json({ error: 'Tên đăng nhập không được để trống và không quá 30 ký tự' }, { status: 400 });
+    }
+    if (!mat_khau || mat_khau.length > 30) {
+      return NextResponse.json({ error: 'Mật khẩu không được để trống và không quá 30 ký tự' }, { status: 400 });
+    }
+    if (!final_ho || !final_ten) {
+      return NextResponse.json({ error: 'Họ và tên không được để trống' }, { status: 400 });
+    }
+    if (/\d/.test(final_ho) || /\d/.test(final_ten)) {
+      return NextResponse.json({ error: 'Họ và tên không được chứa chữ số' }, { status: 400 });
+    }
+    if (!sdt || !sdt.startsWith('0') || sdt.length > 12 || !/^\d+$/.test(sdt)) {
+      return NextResponse.json({ error: 'Số điện thoại không hợp lệ (phải bắt đầu bằng 0, tối đa 12 chữ số)' }, { status: 400 });
+    }
+    if (!email || email.length > 50 || !/^\S+@\S+\.\S+$/.test(email)) {
+      return NextResponse.json({ error: 'Email không hợp lệ và không quá 50 ký tự' }, { status: 400 });
+    }
+    if (!dia_chi || dia_chi.length > 200) {
+      return NextResponse.json({ error: 'Địa chỉ không được để trống và không quá 200 ký tự' }, { status: 400 });
     }
 
     // 2. Captcha Validation (Static check for KS72W as seen in UI)
@@ -52,12 +70,6 @@ export async function POST(request: Request) {
     const existingEmail = await sql`SELECT ma_kh FROM khach_hang WHERE email = ${email}`;
     if (existingEmail.length > 0) {
       return NextResponse.json({ error: 'Địa chỉ Email này đã được đăng ký' }, { status: 400 });
-    }
-
-    // 5. Check duplicate Phone
-    const existingPhone = await sql`SELECT ma_kh FROM khach_hang WHERE sdt = ${sdt}`;
-    if (existingPhone.length > 0) {
-      return NextResponse.json({ error: 'Số điện thoại này đã được sử dụng' }, { status: 400 });
     }
 
     const hashedPassword = await bcrypt.hash(mat_khau, 10);

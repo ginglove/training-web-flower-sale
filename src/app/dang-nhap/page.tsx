@@ -26,15 +26,41 @@ export default function Login() {
       const data = await res.json();
 
       if (!res.ok) {
-        throw new Error(data.error || 'Đăng nhập thất bại');
+        const isAdmin = ten_dn.toLowerCase() === 'admin';
+
+        if (!isAdmin) {
+          // Track login failures per username (Only for non-admin)
+          const failKey = `login_fails_${ten_dn.trim().toLowerCase()}`;
+          const failCount = parseInt(localStorage.getItem(failKey) || '0') + 1;
+          localStorage.setItem(failKey, failCount.toString());
+
+          if (failCount >= 5) {
+            setError(`Tài khoản "${ten_dn}" đã nhập sai ${failCount} lần. Vui lòng đặt lại mật khẩu.`);
+            setTimeout(() => {
+              router.push('/quen-mat-khau');
+            }, 2000);
+            return;
+          }
+
+          throw new Error(`${data.error || 'Đăng nhập thất bại'} (Lần ${failCount}/5)`);
+        } else {
+          // Admin specific error display and redirect
+          setError('Cảnh báo: Thông tin xác thực Quản trị viên không chính xác. Đang chuyển hướng về Cổng Quản trị...');
+          setTimeout(() => {
+            router.push('/quan-tri/dang-nhap');
+          }, 2500);
+          return;
+        }
       }
 
+      // Success: Clear fail count for THIS user
+      localStorage.removeItem(`login_fails_${ten_dn.trim().toLowerCase()}`);
+      
       // Store basic user info in localStorage for client-side use
       localStorage.setItem('user', JSON.stringify(data.user));
       
-      // BUG: Redirects to home instead of previous page
       router.push('/');
-      router.refresh(); // Refresh layout to show logged in state
+      router.refresh();
     } catch (err: any) {
       setError(err.message);
     } finally {
@@ -76,7 +102,7 @@ export default function Login() {
           <div>
             <div className="flex justify-between items-center mb-2">
               <label className="block text-sm font-medium text-forest">Mật khẩu</label>
-              <a href="#" className="text-xs text-forest/60 hover:text-blush">Quên mật khẩu?</a>
+              <Link href="/quen-mat-khau" className="text-xs text-forest/60 hover:text-blush">Quên mật khẩu?</Link>
             </div>
             <input 
               type="password" 

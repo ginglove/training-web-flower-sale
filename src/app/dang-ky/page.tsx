@@ -37,17 +37,32 @@ export default function RegisterPage() {
 
   const validate = () => {
     const newErrors: Partial<Record<FormFields, string>> = {};
-    const requiredFields: FormFields[] = ['ten_dn', 'mat_khau', 'ho', 'ten', 'sdt', 'email', 'dia_chi', 'captcha'];
     
-    requiredFields.forEach(field => {
-      if (!formData[field]) {
-        newErrors[field] = 'Vui lòng không để trống trường này';
-      }
-    });
+    if (!formData.ten_dn) newErrors.ten_dn = 'Vui lòng nhập tên đăng nhập';
+    else if (formData.ten_dn.length > 30) newErrors.ten_dn = 'Tối đa 30 ký tự';
 
-    if (formData.email && !/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Email không hợp lệ';
-    }
+    if (!formData.mat_khau) newErrors.mat_khau = 'Vui lòng nhập mật khẩu';
+    else if (formData.mat_khau.length > 30) newErrors.mat_khau = 'Tối đa 30 ký tự';
+
+    if (!formData.ho) newErrors.ho = 'Vui lòng nhập họ';
+    else if (/\d/.test(formData.ho)) newErrors.ho = 'Không được chứa chữ số';
+
+    if (!formData.ten) newErrors.ten = 'Vui lòng nhập tên';
+    else if (/\d/.test(formData.ten)) newErrors.ten = 'Không được chứa chữ số';
+
+    if (!formData.sdt) newErrors.sdt = 'Vui lòng nhập số điện thoại';
+    else if (!formData.sdt.startsWith('0')) newErrors.sdt = 'Phải bắt đầu bằng số 0';
+    else if (formData.sdt.length > 12) newErrors.sdt = 'Tối đa 12 số';
+    else if (!/^\d+$/.test(formData.sdt)) newErrors.sdt = 'Chỉ được chứa chữ số';
+
+    if (!formData.email) newErrors.email = 'Vui lòng nhập email';
+    else if (formData.email.length > 50) newErrors.email = 'Tối đa 50 ký tự';
+    else if (!/\S+@\S+\.\S+$/.test(formData.email)) newErrors.email = 'Email không hợp lệ';
+
+    if (!formData.dia_chi) newErrors.dia_chi = 'Vui lòng nhập địa chỉ';
+    else if (formData.dia_chi.length > 200) newErrors.dia_chi = 'Tối đa 200 ký tự';
+
+    if (!formData.captcha) newErrors.captcha = 'Vui lòng nhập mã captcha';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -163,14 +178,14 @@ export default function RegisterPage() {
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <User size={12} /> Tên Đăng Nhập <span className="text-red-500">(*)</span>
               </label>
-              <input type="text" name="ten_dn" value={formData.ten_dn} onChange={handleChange} className={inputClasses('ten_dn')} placeholder="HungNX" />
+              <input type="text" name="ten_dn" value={formData.ten_dn} onChange={handleChange} className={inputClasses('ten_dn')} placeholder="HungNX" maxLength={30} />
               <ErrorMessage message={errors.ten_dn} />
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-1">
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <Lock size={12} /> Mật Khẩu <span className="text-red-500">(*)</span>
               </label>
-              <input type="password" name="mat_khau" value={formData.mat_khau} onChange={handleChange} className={inputClasses('mat_khau')} placeholder="••••••••" />
+              <input type="password" name="mat_khau" value={formData.mat_khau} onChange={handleChange} className={inputClasses('mat_khau')} placeholder="••••••••" maxLength={30} />
               <ErrorMessage message={errors.mat_khau} />
             </motion.div>
           </div>
@@ -178,12 +193,12 @@ export default function RegisterPage() {
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <motion.div variants={itemVariants} className="space-y-1">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">Họ <span className="text-red-500">(*)</span></label>
-              <input type="text" name="ho" value={formData.ho} onChange={handleChange} className={inputClasses('ho')} placeholder="Nguyễn Xuân" />
+              <input type="text" name="ho" value={formData.ho} onChange={handleChange} className={inputClasses('ho')} placeholder="Nguyễn Xuân" maxLength={50} />
               <ErrorMessage message={errors.ho} />
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-1">
               <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">Tên <span className="text-red-500">(*)</span></label>
-              <input type="text" name="ten" value={formData.ten} onChange={handleChange} className={inputClasses('ten')} placeholder="Hùng" />
+              <input type="text" name="ten" value={formData.ten} onChange={handleChange} className={inputClasses('ten')} placeholder="Hùng" maxLength={50} />
               <ErrorMessage message={errors.ten} />
             </motion.div>
           </div>
@@ -193,14 +208,14 @@ export default function RegisterPage() {
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <Phone size={12} /> Số Điện Thoại <span className="text-red-500">(*)</span>
               </label>
-              <input type="tel" name="sdt" value={formData.sdt} onChange={handleChange} className={inputClasses('sdt')} placeholder="0912345678" />
+              <input type="tel" name="sdt" value={formData.sdt} onChange={handleChange} className={inputClasses('sdt')} placeholder="0912345678" maxLength={12} />
               <ErrorMessage message={errors.sdt} />
             </motion.div>
             <motion.div variants={itemVariants} className="space-y-1">
               <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
                 <Mail size={12} /> Email <span className="text-red-500">(*)</span>
               </label>
-              <input type="email" name="email" value={formData.email} onChange={handleChange} className={inputClasses('email')} placeholder="hungnx@email.com" />
+              <input type="email" name="email" value={formData.email} onChange={handleChange} className={inputClasses('email')} placeholder="hungnx@email.com" maxLength={50} />
               <ErrorMessage message={errors.email} />
             </motion.div>
           </div>
@@ -209,7 +224,7 @@ export default function RegisterPage() {
             <label className="flex items-center gap-2 text-[10px] font-black text-text-muted uppercase tracking-widest ml-4">
               <MapPin size={12} /> Địa Chỉ Nhà <span className="text-red-500">(*)</span>
             </label>
-            <textarea name="dia_chi" rows={2} value={formData.dia_chi} onChange={handleChange} className={inputClasses('dia_chi')} placeholder="250 Hoàng Quốc Việt, Cầu Giấy, Hà Nội"></textarea>
+            <textarea name="dia_chi" rows={2} value={formData.dia_chi} onChange={handleChange} className={inputClasses('dia_chi')} placeholder="250 Hoàng Quốc Việt, Cầu Giấy, Hà Nội" maxLength={200}></textarea>
             <ErrorMessage message={errors.dia_chi} />
           </motion.div>
 

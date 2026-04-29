@@ -12,8 +12,8 @@ export async function addProduct(formData: FormData) {
     const mo_ta = formData.get('mo_ta') as string;
     const hinh_anh = formData.get('hinh_anh') as string;
 
-    if (!ten_hoa || !ma_loai || isNaN(gia)) {
-      return { success: false, error: "Vui lòng điền đầy đủ thông tin bắt buộc" };
+    if (!ten_hoa || !ma_loai || isNaN(gia) || !mo_ta) {
+      return { success: false, error: "Vui lòng điền đầy đủ các trường bắt buộc: Tên, Loại, Giá và Mô tả." };
     }
 
     await sql`
@@ -39,6 +39,10 @@ export async function updateProduct(ma_hoa: number, formData: FormData) {
     const trang_thai = parseInt(formData.get('trang_thai') as string);
     const mo_ta = formData.get('mo_ta') as string;
     const hinh_anh = formData.get('hinh_anh') as string;
+
+    if (!ten_hoa || !ma_loai || isNaN(gia) || !mo_ta) {
+      return { success: false, error: "Vui lòng điền đầy đủ các trường bắt buộc: Tên, Loại, Giá và Mô tả." };
+    }
 
     await sql`
       UPDATE hoa 
