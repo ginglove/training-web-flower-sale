@@ -1,8 +1,10 @@
 import { NextResponse } from 'next/server';
 import type { NextRequest } from 'next/server';
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
+  const requestHeaders = new Headers(request.headers);
+  requestHeaders.set('x-pathname', pathname);
 
   // 1. ADMIN PROTECTION
   if (pathname.startsWith('/quan-tri') && pathname !== '/quan-tri/dang-nhap') {
@@ -46,13 +48,15 @@ export function middleware(request: NextRequest) {
     }
   }
 
-  return NextResponse.next();
+  return NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  });
 }
 
 export const config = {
   matcher: [
-    '/quan-tri/:path*',
-    '/thanh-vien/:path*',
-    '/thanh-toan/:path*',
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
 };

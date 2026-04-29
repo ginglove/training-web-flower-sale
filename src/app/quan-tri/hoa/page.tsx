@@ -5,13 +5,27 @@ import DeleteProductBtn from "@/components/DeleteProductBtn";
 
 export const dynamic = 'force-dynamic';
 
-export default async function AdminProducts() {
+export default async function AdminProducts({
+  searchParams,
+}: {
+  searchParams: { keyword?: string; loai?: string };
+}) {
+  const params = await searchParams;
+  const keyword = params.keyword || '';
+  const loai = params.loai || '';
+
   let products: any[] = [];
+  let categories: any[] = [];
+  
   try {
+    categories = await sql`SELECT * FROM loai_hoa ORDER BY ten_loai ASC`;
+    
     products = await sql`
       SELECT h.*, l.ten_loai 
       FROM hoa h 
       LEFT JOIN loai_hoa l ON h.ma_loai = l.ma_loai 
+      WHERE (h.ten_hoa ILIKE ${'%' + keyword + '%'})
+      ${loai ? sql`AND h.ma_loai = ${loai}` : sql``}
       ORDER BY h.ngay_d DESC
     `;
   } catch (error) {
@@ -28,6 +42,41 @@ export default async function AdminProducts() {
         <Link href="/quan-tri/hoa/them" className="nm-raised px-8 py-4 rounded-2xl flex items-center gap-3 text-[10px] font-black uppercase tracking-widest text-sage hover:scale-105 transition-transform">
           <Plus size={16} /> Thêm hoa mới
         </Link>
+      </div>
+
+      {/* SEARCH & FILTER TOOLBAR */}
+      <div className="nm-raised rounded-[30px] p-8">
+        <form className="flex flex-col md:flex-row gap-6">
+          <div className="flex-1">
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-4 mb-2 block">Tìm kiếm tên hoa</label>
+            <div className="relative">
+              <input 
+                name="keyword" 
+                defaultValue={keyword}
+                placeholder="Nhập tên hoa để tìm..." 
+                className="w-full nm-inset px-6 py-4 rounded-2xl outline-none text-xs text-text-main"
+              />
+            </div>
+          </div>
+          <div className="w-full md:w-64">
+            <label className="text-[10px] font-black text-text-muted uppercase tracking-widest ml-4 mb-2 block">Lọc theo loại</label>
+            <select 
+              name="loai" 
+              defaultValue={loai}
+              className="w-full nm-inset px-6 py-4 rounded-2xl outline-none text-xs text-text-main appearance-none bg-transparent"
+            >
+              <option value="">Tất cả loại hoa</option>
+              {categories.map(c => (
+                <option key={c.ma_loai} value={c.ma_loai}>{c.ten_loai}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-end">
+            <button type="submit" className="nm-button px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-sage hover:text-sage-dark transition-all">
+              Áp Dụng
+            </button>
+          </div>
+        </form>
       </div>
 
       <div className="nm-raised rounded-[40px] overflow-hidden">
