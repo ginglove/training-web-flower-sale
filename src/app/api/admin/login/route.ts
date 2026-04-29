@@ -36,7 +36,7 @@ export async function POST(request: Request) {
 
       response.cookies.set('admin_token', token, {
         httpOnly: true,
-        maxAge: 60 * 60 * 8,
+        maxAge: 70,
         path: '/',
       });
       return response;
@@ -67,7 +67,13 @@ export async function POST(request: Request) {
 
     response.cookies.set('admin_token', token, {
       httpOnly: true,
-      maxAge: 60 * 60 * 8,
+      maxAge: 70,
+      path: '/',
+    });
+
+    response.cookies.set('session_expiry', (Date.now() + 70 * 1000).toString(), {
+      httpOnly: false,
+      maxAge: 70,
       path: '/',
     });
 

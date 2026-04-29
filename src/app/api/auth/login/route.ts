@@ -50,7 +50,13 @@ export async function POST(request: Request) {
 
     response.cookies.set('token', token, {
       httpOnly: true,
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 70,
+      path: '/',
+    });
+
+    response.cookies.set('session_expiry', (Date.now() + 70 * 1000).toString(), {
+      httpOnly: false, // Accessible by JS
+      maxAge: 70,
       path: '/',
     });
 

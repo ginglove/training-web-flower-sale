@@ -2,6 +2,7 @@
 
 import { usePathname } from 'next/navigation';
 import CartBadge from "@/components/CartBadge";
+import SessionMonitor from "@/components/SessionMonitor";
 
 export default function LayoutWrapper({
   children,
@@ -19,6 +20,7 @@ export default function LayoutWrapper({
 
   return (
     <>
+      <SessionMonitor />
       <header className="fixed top-6 left-0 w-full z-50 px-6 md:px-12 pointer-events-none">
         <div className="container mx-auto flex justify-between items-center pointer-events-auto">
           {/* Logo */}

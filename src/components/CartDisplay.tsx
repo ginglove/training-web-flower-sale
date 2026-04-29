@@ -8,10 +8,27 @@ export default function CartDisplay() {
   const [cart, setCart] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const loadCart = () => {
     const savedCart = JSON.parse(localStorage.getItem('cart') || '[]');
     setCart(savedCart);
     setLoading(false);
+  };
+
+  useEffect(() => {
+    loadCart();
+    
+    // Listen for internal app updates
+    window.addEventListener('cart-updated', loadCart);
+    
+    // Listen for updates from other tabs
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'cart') loadCart();
+    });
+
+    return () => {
+      window.removeEventListener('cart-updated', loadCart);
+      window.removeEventListener('storage', loadCart);
+    };
   }, []);
 
   const updateQuantity = (id: number, delta: number) => {

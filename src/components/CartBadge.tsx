@@ -16,7 +16,13 @@ export default function CartBadge() {
   useEffect(() => {
     updateCount();
     window.addEventListener('cart-updated', updateCount);
-    return () => window.removeEventListener('cart-updated', updateCount);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'cart') updateCount();
+    });
+    return () => {
+      window.removeEventListener('cart-updated', updateCount);
+      window.removeEventListener('storage', updateCount);
+    };
   }, []);
 
   return (

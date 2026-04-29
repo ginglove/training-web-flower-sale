@@ -3,6 +3,7 @@
 import { LayoutDashboard, Tag, Flower2, ShoppingCart, Users, Newspaper, MessageSquare, LogOut, ChevronRight, User, BarChart3 } from 'lucide-react';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
+import SessionMonitor from '@/components/SessionMonitor';
 
 export default function AdminLayout({
   children,
@@ -29,6 +30,7 @@ export default function AdminLayout({
 
   return (
     <div className="flex min-h-screen bg-[#1E2122]">
+      <SessionMonitor />
       {/* Sidebar - Premium Charcoal */}
       <aside className="w-80 flex flex-col fixed h-full z-50 bg-[#1E2122] border-r border-white/5 overflow-y-auto no-scrollbar">
         <div className="p-10">
