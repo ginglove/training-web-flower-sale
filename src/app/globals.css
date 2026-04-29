@@ -1,0 +1,66 @@
+@import "tailwindcss";
+
+@theme {
+  --color-base: #F7F5F2;
+  --color-highlight: #FFFFFF;
+  --color-shadow: #D1D9E6;
+  --color-sage: #9CAF88; 
+  --color-petal: #F3D5D9;
+  --color-text-main: #2D3436;
+  --color-text-muted: #636E72;
+  
+  --font-serif: var(--font-playfair);
+  --font-sans: var(--font-inter);
+}
+
+:root {
+  --background: #F7F5F2;
+  --foreground: #2D3436;
+  --sage: #9CAF88;
+}
+
+body {
+  background: var(--background);
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(156, 175, 136, 0.05) 0%, transparent 20%),
+    radial-gradient(circle at 90% 80%, rgba(243, 213, 217, 0.08) 0%, transparent 25%);
+  background-attachment: fixed;
+  color: var(--foreground);
+  font-family: var(--font-inter), sans-serif;
+  overflow-x: hidden;
+}
+
+.nm-raised {
+  background: #F7F5F2;
+  box-shadow: 10px 10px 20px #e0deda, -10px -10px 20px #ffffff;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+}
+
+.nm-inset {
+  background: #F7F5F2;
+  box-shadow: inset 8px 8px 16px #e0deda, inset -8px -8px 16px #ffffff;
+}
+
+.nm-button {
+  background: #F7F5F2;
+  box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff;
+  color: #2D3436;
+  transition: all 0.3s ease;
+}
+
+.nm-button:hover {
+  box-shadow: 2px 2px 5px #d1d9e6, -2px -2px 5px #ffffff;
+  transform: translateY(1px);
+}
+
+.nm-button-sage {
+  background: #9CAF88;
+  box-shadow: 6px 6px 12px #d1d9e6, -6px -6px 12px #ffffff;
+  color: white;
+  transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.nm-header-sage {
+  background: #9CAF88;
+  color: white;
+}
