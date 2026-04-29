@@ -40,15 +40,15 @@ export default async function ProductList({
       query = sql`${query} AND h.ma_loai = ${parseInt(loai)}`;
     }
 
-    // Filter by Price (gia)
-    if (gia === '0-100000') {
-      query = sql`${query} AND h.gia < 100000`;
-    } else if (gia === '100000-200000') {
-      query = sql`${query} AND h.gia BETWEEN 100000 AND 200000`;
-    } else if (gia === '200000-500000') {
-      query = sql`${query} AND h.gia BETWEEN 200000 AND 500000`;
-    } else if (gia === '500000-up') {
-      query = sql`${query} AND h.gia > 500000`;
+    // Filter by Price (gia) - Optimized for 100k increments
+    if (gia) {
+      if (gia.includes('-up')) {
+        const min = parseInt(gia.split('-')[0]);
+        query = sql`${query} AND h.gia >= ${min}`;
+      } else if (gia.includes('-')) {
+        const [min, max] = gia.split('-').map(v => parseInt(v));
+        query = sql`${query} AND h.gia BETWEEN ${min} AND ${max}`;
+      }
     }
 
     // Sorting

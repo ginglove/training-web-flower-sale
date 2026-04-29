@@ -32,8 +32,14 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
   const priceRanges = [
     { label: "Dưới 100.000đ", value: "0-100000" },
     { label: "100.000đ - 200.000đ", value: "100000-200000" },
-    { label: "200.000đ - 500.000đ", value: "200000-500000" },
-    { label: "Trên 500.000đ", value: "500000-up" },
+    { label: "200.000đ - 300.000đ", value: "200000-300000" },
+    { label: "300.000đ - 400.000đ", value: "300000-400000" },
+    { label: "400.000đ - 500.000đ", value: "400000-500000" },
+    { label: "500.000đ - 600.000đ", value: "500000-600000" },
+    { label: "600.000đ - 700.000đ", value: "600000-700000" },
+    { label: "700.000đ - 800.000đ", value: "700000-800000" },
+    { label: "800.000đ - 900.000đ", value: "800000-900000" },
+    { label: "Trên 900.000đ", value: "900000-up" },
   ];
 
   return (
@@ -83,7 +89,7 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
           <div className="nm-raised-sm p-2 rounded-xl text-text-main">
             <DollarSign size={18} />
           </div>
-          <h2 className="font-black text-xs uppercase tracking-widest text-text-main">Lọc Theo Giá</h2>
+          <h2 className="font-black text-xs uppercase tracking-widest text-text-main">Giá Sản Phẩm</h2>
         </div>
         <ul className="space-y-4">
           {priceRanges.map((range, index) => (
@@ -99,6 +105,35 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
         </ul>
       </div>
 
+      {/* THỐNG KÊ */}
+      <div className="nm-raised rounded-[40px] overflow-hidden p-8">
+        <div className="flex items-center gap-3 px-4 mb-8">
+          <div className="nm-raised-sm p-2 rounded-xl text-text-main">
+            <BarChart3 size={18} />
+          </div>
+          <h2 className="font-black text-xs uppercase tracking-widest text-text-main">Thống Kê</h2>
+        </div>
+        <div className="px-4 space-y-8">
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Tổng Số Loại Hoa</span>
+            <span className="nm-inset px-5 py-2 rounded-full text-xs font-black text-text-main">
+              {stats.totalCategories}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Tổng Số Hoa</span>
+            <span className="nm-inset px-5 py-2 rounded-full text-xs font-black text-text-main">
+              {stats.totalProducts}
+            </span>
+          </div>
+          <div className="flex justify-between items-center">
+            <span className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Số Khách Hàng</span>
+            <span className="nm-inset px-5 py-2 rounded-full text-xs font-black text-text-main">
+              {stats.totalCustomers}
+            </span>
+          </div>
+        </div>
+      </div>
     </aside>
   );
 }

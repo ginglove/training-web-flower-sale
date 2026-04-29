@@ -33,9 +33,10 @@ export default function LayoutWrapper({
           <nav className="hidden lg:flex gap-2 floating-nav p-1.5 rounded-full border border-white/40 shadow-xl">
             {[
               { label: 'Trang chủ', href: '/' },
+              { label: 'Giới thiệu', href: '/gioi-thieu' },
               { label: 'Sản phẩm', href: '/hoa' },
-              { label: 'Dịch vụ', href: '/dich-vu' },
               { label: 'Tin tức', href: '/tin-tuc' },
+              { label: 'Dịch vụ', href: '/dich-vu' },
               { label: 'Giỏ hàng', href: '/gio-hang' },
               { label: 'Liên hệ', href: '/lien-he' }
             ].map((item) => (

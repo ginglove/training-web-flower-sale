@@ -1,23 +1,14 @@
 import sql from "@/lib/db";
+import { notFound } from "next/navigation";
 import SidebarLeft from "@/components/SidebarLeft";
 import SidebarRight from "@/components/SidebarRight";
-import Link from "next/link";
-import { ChevronLeft, Heart, Share2 } from 'lucide-react';
-import { notFound } from "next/navigation";
 import AddToCart from "@/components/AddToCart";
+import { Calendar, Tag, Info } from 'lucide-react';
 
-export const dynamic = 'force-dynamic';
-
-export default async function FlowerDetail({
-  params,
-}: {
-  params: { id: string };
-}) {
+export default async function FlowerDetailPage({ params }: { params: { id: string } }) {
   const { id } = await params;
   
-  let flower: any = null;
-  let relatedFlowers: any[] = [];
-
+  let flower;
   try {
     const results = await sql`
       SELECT h.*, l.ten_loai 
@@ -25,88 +16,95 @@ export default async function FlowerDetail({
       LEFT JOIN loai_hoa l ON h.ma_loai = l.ma_loai 
       WHERE h.ma_hoa = ${parseInt(id)}
     `;
-    
     if (results.length === 0) return notFound();
     flower = results[0];
-
-    relatedFlowers = await sql`
-      SELECT * FROM hoa 
-      WHERE ma_loai = ${flower.ma_loai} AND ma_hoa != ${flower.ma_hoa} 
-      LIMIT 4
-    `;
   } catch (error) {
-    console.error(error);
+    console.error("Failed to fetch flower details", error);
+    return notFound();
   }
 
   return (
-    <div className="container mx-auto px-6 py-12">
+    <div className="container mx-auto px-6">
       <div className="flex flex-col lg:grid lg:grid-cols-12 gap-16">
+        {/* LEFT SIDEBAR */}
         <aside className="lg:col-span-3">
           <SidebarLeft currentLoai={flower.ma_loai.toString()} />
         </aside>
 
-        <main className="lg:col-span-6 space-y-12">
-          {/* Back Link */}
-          <Link href="/hoa" className="inline-flex items-center gap-2 text-[10px] font-black text-sage uppercase tracking-[0.2em] hover:translate-x-[-4px] transition-transform">
-            <ChevronLeft size={14} /> Quay lại danh sách
-          </Link>
-
-          {/* Product Section */}
-          <div className="nm-raised rounded-[60px] p-10 bg-white/20">
-            <div className="flex flex-col gap-12">
-              {/* Image */}
-              <div className="nm-inset p-4 rounded-[50px] overflow-hidden aspect-square shadow-inner">
-                <img src={flower.hinh_anh} alt={flower.ten_hoa} className="w-full h-full object-cover rounded-[40px]" />
-              </div>
-
-              {/* Info */}
-              <div className="space-y-8">
-                <div>
-                  <span className="text-[10px] font-black text-sage uppercase tracking-[0.3em] mb-3 block">{flower.ten_loai}</span>
-                  <h1 className="font-serif text-5xl font-bold text-text-main leading-tight">{flower.ten_hoa}</h1>
-                  <p className="text-3xl font-black text-text-main tracking-tighter mt-4">
-                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(flower.gia)}
-                  </p>
-                </div>
-
-                <div className="h-[1px] w-full bg-text-muted/10"></div>
-
-                <div className="space-y-4">
-                  <h3 className="text-[10px] font-black text-text-muted uppercase tracking-widest">Mô tả sản phẩm</h3>
-                  <p className="text-sm text-text-main leading-relaxed italic opacity-80">
-                    {flower.mo_ta || "Hương thơm dịu nhẹ, sắc hoa tươi thắm, món quà hoàn hảo cho những dịp đặc biệt."}
-                  </p>
-                </div>
-
-                <div className="flex flex-wrap gap-6 pt-6">
-                  <AddToCart product={flower} variant="button" />
-                  <button className="nm-button w-16 h-16 rounded-full flex items-center justify-center text-text-muted hover:text-red-400 transition-colors">
-                    <Heart size={20} />
-                  </button>
-                  <button className="nm-button w-16 h-16 rounded-full flex items-center justify-center text-text-muted hover:text-sage transition-colors">
-                    <Share2 size={20} />
-                  </button>
-                </div>
-              </div>
+        {/* CENTER CONTENT - DETAIL CARD */}
+        <main className="lg:col-span-6">
+          <div className="nm-raised rounded-[40px] overflow-hidden mb-8">
+            <div className="bg-sage/10 px-8 py-4 border-b border-white/40">
+              <h2 className="text-sage font-black text-xs uppercase tracking-[0.3em]">
+                3.3. Giới thiệu chi tiết sản phẩm
+              </h2>
             </div>
           </div>
 
-          {/* Related Products */}
-          <div className="space-y-10 pt-12">
-            <h2 className="font-serif text-3xl font-bold text-text-main text-center">Hoa cùng loại</h2>
-            <div className="grid grid-cols-2 gap-8">
-              {relatedFlowers.map(rf => (
-                <Link key={rf.ma_hoa} href={`/hoa/${rf.ma_hoa}`} className="group space-y-4 text-center">
-                  <div className="nm-raised p-2 rounded-[40px] aspect-square overflow-hidden">
-                    <img src={rf.hinh_anh} alt={rf.ten_hoa} className="w-full h-full object-cover rounded-[30px] group-hover:scale-110 transition-transform duration-700" />
-                  </div>
-                  <h4 className="font-bold text-sm text-text-main group-hover:text-sage transition-colors">{rf.ten_hoa}</h4>
-                </Link>
-              ))}
+          <div className="nm-raised rounded-[80px] overflow-hidden p-12 md:p-16 bg-white/40 backdrop-blur-sm relative">
+            {/* Header / Title from Requirement */}
+            <div className="text-center mb-12">
+               <h3 className="nm-inset-sm inline-block px-8 py-2 rounded-full text-text-muted font-bold text-xs mb-6">
+                 {flower.ten_hoa}
+               </h3>
+               <h1 className="font-serif text-4xl md:text-5xl font-black text-sage leading-tight mb-2">
+                 {flower.ten_hoa}
+               </h1>
+               <div className="h-1 w-20 bg-sage/20 mx-auto rounded-full"></div>
+            </div>
+
+            {/* Main Image in Inset Well */}
+            <div className="nm-inset rounded-[60px] p-4 mb-16 aspect-square max-w-md mx-auto overflow-hidden">
+               <img 
+                 src={flower.hinh_anh} 
+                 alt={flower.ten_hoa} 
+                 className="w-full h-full object-cover rounded-[50px] shadow-sm"
+               />
+            </div>
+
+            {/* Meta Information Grid */}
+            <div className="space-y-8 text-center max-w-xl mx-auto mb-16">
+               <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted flex items-center gap-2">
+                    <Tag size={12} className="text-sage" /> Tên Sản Phẩm
+                  </span>
+                  <p className="text-2xl font-bold text-text-main">{flower.ten_hoa}</p>
+               </div>
+
+               <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted flex items-center gap-2">
+                    <Calendar size={12} className="text-sage" /> Ngày Đăng
+                  </span>
+                  <p className="text-sm font-bold text-text-main/70">
+                    {flower.ngay_d ? new Date(flower.ngay_d).toLocaleString('vi-VN') : '0000-00-00 00:00:00'}
+                  </p>
+               </div>
+
+               <div className="flex flex-col items-center gap-2">
+                  <span className="text-[10px] font-black uppercase tracking-[0.4em] text-text-muted flex items-center gap-2">
+                    <Info size={12} className="text-sage" /> Giá Bán
+                  </span>
+                  <p className="text-4xl font-black text-sage tracking-tighter">
+                    {new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(flower.gia)}
+                  </p>
+               </div>
+            </div>
+
+            {/* Artisanal Description */}
+            <div className="nm-inset rounded-[40px] p-10 mb-16 text-center bg-white/20">
+               <p className="text-text-muted font-medium leading-relaxed italic">
+                 "{flower.mo_ta || 'Sản phẩm hoa tươi nghệ thuật được thiết kế riêng bởi các chuyên gia tại Siêu Thị Hoa OnLine.'}"
+               </p>
+            </div>
+
+            {/* Action Button */}
+            <div className="text-center">
+               <AddToCart product={flower} variant="button" />
             </div>
           </div>
         </main>
 
+        {/* RIGHT SIDEBAR */}
         <aside className="lg:col-span-3">
           <SidebarRight />
         </aside>
