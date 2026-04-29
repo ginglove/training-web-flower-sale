@@ -58,8 +58,8 @@ export default function CartDisplay() {
       {/* Table Header Labels - Desktop Only */}
       <div className="hidden lg:grid grid-cols-12 gap-4 px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">
         <div className="col-span-1">STT</div>
-        <div className="col-span-4">Tên Sản Phẩm</div>
-        <div className="col-span-3 text-center">Số Lượng</div>
+        <div className="col-span-5">Tên Sản Phẩm</div>
+        <div className="col-span-2 text-center">Số Lượng</div>
         <div className="col-span-2 text-right">Đơn Giá</div>
         <div className="col-span-2 text-right">Thành Tiền</div>
       </div>
@@ -74,43 +74,45 @@ export default function CartDisplay() {
               <span className="text-xs font-black text-text-main">{index + 1}</span>
             </div>
             
-            {/* Tên Hàng */}
-            <div className="col-span-4 flex items-center gap-4">
+            {/* Tên Hàng - Expanded column */}
+            <div className="col-span-5 flex items-center gap-4">
               <div className="w-14 h-14 lg:w-16 lg:h-16 nm-inset p-1 rounded-2xl overflow-hidden flex-shrink-0">
                 <img src={item.hinh_anh} alt={item.ten_hoa} className="w-full h-full object-cover rounded-xl" />
               </div>
-              <div className="min-w-0">
-                <h4 className="font-bold text-text-main text-sm lg:text-base truncate">{item.ten_hoa}</h4>
+              <div className="min-w-0 flex-1">
+                <h4 className="font-bold text-text-main text-sm lg:text-base leading-tight line-clamp-2 whitespace-normal">
+                  {item.ten_hoa}
+                </h4>
                 <button 
                   onClick={() => removeItem(item.ma_hoa)} 
-                  className="text-[9px] font-black text-red-400 uppercase tracking-widest mt-1 hover:text-red-500 transition-colors flex items-center gap-1"
+                  className="text-[9px] font-black text-red-400 uppercase tracking-widest mt-2 hover:text-red-500 transition-colors flex items-center gap-1"
                 >
                   <Trash2 size={10} /> [Xóa]
                 </button>
               </div>
             </div>
             
-            {/* Số Lượng */}
-            <div className="col-span-3 flex lg:justify-center items-center gap-4">
+            {/* Số Lượng - Narrowed column */}
+            <div className="col-span-2 flex lg:justify-center items-center gap-4">
               <span className="text-[10px] font-black text-text-muted lg:hidden uppercase tracking-widest">Số lượng:</span>
               <div className="flex items-center gap-2 nm-inset p-1 rounded-xl">
                 <button 
                   onClick={() => updateQuantity(item.ma_hoa, -1)} 
-                  className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
+                  className="w-7 h-7 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
                 >
-                  <Minus size={12} />
+                  <Minus size={10} />
                 </button>
                 <input 
                   type="text" 
                   value={item.quantity} 
                   readOnly 
-                  className="bg-transparent text-xs font-black text-text-main w-8 text-center outline-none"
+                  className="bg-transparent text-xs font-black text-text-main w-6 text-center outline-none"
                 />
                 <button 
                   onClick={() => updateQuantity(item.ma_hoa, 1)} 
-                  className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
+                  className="w-7 h-7 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
                 >
-                  <Plus size={12} />
+                  <Plus size={10} />
                 </button>
               </div>
             </div>
