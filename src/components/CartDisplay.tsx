@@ -54,44 +54,51 @@ export default function CartDisplay() {
   }
 
   return (
-    <div className="space-y-8">
-      {/* Table Header Labels for RSD matching */}
-      <div className="hidden md:grid grid-cols-12 gap-4 px-10 text-[10px] font-black text-text-muted uppercase tracking-widest border-b border-text-main/5 pb-4">
+    <div className="space-y-6">
+      {/* Table Header Labels - Desktop Only */}
+      <div className="hidden lg:grid grid-cols-12 gap-4 px-8 py-4 text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">
         <div className="col-span-1">STT</div>
-        <div className="col-span-5">Tên Hàng</div>
-        <div className="col-span-2 text-center">Số Lượng</div>
+        <div className="col-span-4">Tên Sản Phẩm</div>
+        <div className="col-span-3 text-center">Số Lượng</div>
         <div className="col-span-2 text-right">Đơn Giá</div>
         <div className="col-span-2 text-right">Thành Tiền</div>
       </div>
 
       {/* Cart Items */}
-      <div className="space-y-6">
+      <div className="space-y-4">
         {cart.map((item, index) => (
-          <div key={item.ma_hoa} className="nm-raised rounded-[30px] p-6 grid grid-cols-1 md:grid-cols-12 items-center gap-6 group transition-all hover:translate-x-2">
-            <div className="col-span-1 flex items-center gap-4">
-              <span className="text-[10px] font-black text-text-muted w-4">{index + 1}</span>
-              <div className="w-16 h-16 nm-inset p-1.5 rounded-2xl overflow-hidden flex-shrink-0 md:hidden">
-                <img src={item.hinh_anh} alt={item.ten_hoa} className="w-full h-full object-cover rounded-xl" />
-              </div>
+          <div key={item.ma_hoa} className="nm-raised rounded-[40px] p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 items-center gap-4 lg:gap-4 transition-all hover:scale-[1.01]">
+            {/* STT & Image (Mobile: Header) */}
+            <div className="col-span-1 flex items-center gap-4 lg:block">
+              <span className="text-[10px] font-black text-text-muted lg:hidden">STT:</span>
+              <span className="text-xs font-black text-text-main">{index + 1}</span>
             </div>
             
-            <div className="col-span-5 flex items-center gap-6">
-              <div className="w-16 h-16 nm-inset p-1.5 rounded-2xl overflow-hidden flex-shrink-0 hidden md:block">
+            {/* Tên Hàng */}
+            <div className="col-span-4 flex items-center gap-4">
+              <div className="w-14 h-14 lg:w-16 lg:h-16 nm-inset p-1 rounded-2xl overflow-hidden flex-shrink-0">
                 <img src={item.hinh_anh} alt={item.ten_hoa} className="w-full h-full object-cover rounded-xl" />
               </div>
               <div className="min-w-0">
-                <h4 className="font-bold text-text-main text-sm truncate">{item.ten_hoa}</h4>
-                <button onClick={() => removeItem(item.ma_hoa)} className="text-[10px] font-black text-red-400 uppercase tracking-widest mt-1 hover:text-red-500 transition-colors">
-                  [Xóa]
+                <h4 className="font-bold text-text-main text-sm lg:text-base truncate">{item.ten_hoa}</h4>
+                <button 
+                  onClick={() => removeItem(item.ma_hoa)} 
+                  className="text-[9px] font-black text-red-400 uppercase tracking-widest mt-1 hover:text-red-500 transition-colors flex items-center gap-1"
+                >
+                  <Trash2 size={10} /> [Xóa]
                 </button>
               </div>
             </div>
             
-            {/* Quantity Controls */}
-            <div className="col-span-2 flex justify-center">
-              <div className="flex items-center gap-3 nm-inset px-3 py-2 rounded-xl">
-                <button onClick={() => updateQuantity(item.ma_hoa, -1)} className="text-text-muted hover:text-text-main transition-colors">
-                  <Minus size={14} />
+            {/* Số Lượng */}
+            <div className="col-span-3 flex lg:justify-center items-center gap-4">
+              <span className="text-[10px] font-black text-text-muted lg:hidden uppercase tracking-widest">Số lượng:</span>
+              <div className="flex items-center gap-2 nm-inset p-1 rounded-xl">
+                <button 
+                  onClick={() => updateQuantity(item.ma_hoa, -1)} 
+                  className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
+                >
+                  <Minus size={12} />
                 </button>
                 <input 
                   type="text" 
@@ -99,20 +106,27 @@ export default function CartDisplay() {
                   readOnly 
                   className="bg-transparent text-xs font-black text-text-main w-8 text-center outline-none"
                 />
-                <button onClick={() => updateQuantity(item.ma_hoa, 1)} className="text-text-muted hover:text-text-main transition-colors">
-                  <Plus size={14} />
+                <button 
+                  onClick={() => updateQuantity(item.ma_hoa, 1)} 
+                  className="w-8 h-8 flex items-center justify-center text-text-muted hover:text-text-main hover:nm-raised rounded-lg transition-all"
+                >
+                  <Plus size={12} />
                 </button>
               </div>
             </div>
 
-            <div className="col-span-2 text-right">
-              <p className="text-xs font-black text-text-muted">
+            {/* Đơn Giá */}
+            <div className="col-span-2 flex lg:block justify-between items-center lg:text-right border-t lg:border-none border-text-main/5 pt-4 lg:pt-0">
+              <span className="text-[10px] font-black text-text-muted lg:hidden uppercase tracking-widest">Đơn giá:</span>
+              <p className="text-xs font-bold text-text-muted">
                 {new Intl.NumberFormat('vi-VN').format(item.gia)}
               </p>
             </div>
 
-            <div className="col-span-2 text-right">
-              <p className="text-xs font-black text-text-main">
+            {/* Thành Tiền */}
+            <div className="col-span-2 flex lg:block justify-between items-center lg:text-right">
+              <span className="text-[10px] font-black text-text-muted lg:hidden uppercase tracking-widest">Thành tiền:</span>
+              <p className="text-sm font-black text-sage">
                 {new Intl.NumberFormat('vi-VN').format(item.gia * item.quantity)}
               </p>
             </div>
@@ -120,27 +134,37 @@ export default function CartDisplay() {
         ))}
       </div>
 
-      {/* Summary */}
-      <div className="nm-inset rounded-[30px] p-8 space-y-8">
-        <div className="text-right">
-          <span className="text-xs font-black text-sage uppercase tracking-[0.2em] mr-4">tổng giá trị giỏ hàng:</span>
-          <span className="text-2xl font-black text-sage tracking-tighter">
-            {new Intl.NumberFormat('vi-VN').format(total)} VNĐ
-          </span>
+      {/* Summary Section */}
+      <div className="nm-inset rounded-[50px] p-8 lg:p-12 mt-12 space-y-10">
+        <div className="flex flex-col md:flex-row justify-between items-center gap-6">
+          <div className="flex items-center gap-4">
+            <div className="w-12 h-12 nm-raised rounded-full flex items-center justify-center text-sage">
+              <ShoppingBag size={20} />
+            </div>
+            <div>
+              <p className="text-[10px] font-black text-text-muted uppercase tracking-[0.2em]">Tổng giá trị đơn hàng</p>
+              <h2 className="text-3xl lg:text-4xl font-black text-sage tracking-tighter">
+                {new Intl.NumberFormat('vi-VN').format(total)} <span className="text-xl">VNĐ</span>
+              </h2>
+            </div>
+          </div>
+          
+          <div className="flex flex-wrap justify-center gap-4">
+            <Link href="/hoa" className="nm-raised px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-text-main hover:nm-inset transition-all">
+              Thêm Sản Phẩm Vào Giỏ
+            </Link>
+            <button 
+              onClick={() => window.location.reload()} 
+              className="nm-raised px-8 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-sage hover:nm-inset transition-all"
+            >
+              Cập Nhật Giỏ Hàng
+            </button>
+          </div>
         </div>
         
-        <div className="flex flex-wrap justify-center gap-6">
-          <Link href="/hoa" className="nm-button px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-text-main transition-all hover:scale-105">
-            Thêm Sản Phẩm Vào Giỏ
-          </Link>
-          <button 
-            onClick={() => window.location.reload()} 
-            className="nm-button px-10 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-sage transition-all hover:scale-105"
-          >
-            Cập Nhật Giỏ Hàng
-          </button>
-          <Link href="/thanh-toan" className="nm-button-sage px-12 py-4 rounded-2xl text-[10px] font-black uppercase tracking-widest text-white transition-all hover:scale-110 shadow-lg">
-            Thanh Toán
+        <div className="pt-8 border-t border-text-main/5 flex justify-center">
+          <Link href="/thanh-toan" className="nm-button-sage w-full max-w-md py-6 rounded-[30px] text-xs font-black uppercase tracking-[0.4em] text-white text-center shadow-xl hover:scale-105 transition-all">
+            Tiến Hành Thanh Toán
           </Link>
         </div>
       </div>
