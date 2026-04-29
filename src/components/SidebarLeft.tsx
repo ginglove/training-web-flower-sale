@@ -134,6 +134,24 @@ export default async function SidebarLeft({ currentLoai }: { currentLoai?: strin
           </div>
         </div>
       </div>
+
+      {/* DELIVERY PARTNERSHIPS */}
+      <div className="space-y-6">
+        <div className="nm-raised rounded-[30px] p-2 overflow-hidden hover:scale-[1.02] transition-transform cursor-pointer">
+          <img 
+            src="/images/global_delivery.png" 
+            alt="Điện Hoa Toàn Cầu" 
+            className="w-full h-auto rounded-[25px]"
+          />
+        </div>
+        <div className="nm-raised rounded-[30px] p-2 overflow-hidden hover:scale-[1.02] transition-transform cursor-pointer">
+          <img 
+            src="/images/national_delivery.png" 
+            alt="Gửi Hoa Toàn Quốc" 
+            className="w-full h-auto rounded-[25px]"
+          />
+        </div>
+      </div>
     </aside>
   );
 }
