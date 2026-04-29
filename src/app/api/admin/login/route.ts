@@ -36,7 +36,13 @@ export async function POST(request: Request) {
 
       response.cookies.set('admin_token', token, {
         httpOnly: true,
-        maxAge: 70,
+        maxAge: 3600,
+        path: '/',
+      });
+
+      response.cookies.set('session_expiry', (Date.now() + 3600 * 1000).toString(), {
+        httpOnly: false,
+        maxAge: 3600,
         path: '/',
       });
       return response;
@@ -67,13 +73,13 @@ export async function POST(request: Request) {
 
     response.cookies.set('admin_token', token, {
       httpOnly: true,
-      maxAge: 70,
+      maxAge: 3600,
       path: '/',
     });
 
-    response.cookies.set('session_expiry', (Date.now() + 70 * 1000).toString(), {
+    response.cookies.set('session_expiry', (Date.now() + 3600 * 1000).toString(), {
       httpOnly: false,
-      maxAge: 70,
+      maxAge: 3600,
       path: '/',
     });
 
