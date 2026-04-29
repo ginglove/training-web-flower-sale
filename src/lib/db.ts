@@ -2,10 +2,20 @@ import postgres from 'postgres';
 
 const globalForSql = global as unknown as { sql: postgres.Sql<{}> };
 
-const sql = globalForSql.sql || postgres(process.env.DATABASE_URL!, {
-  max: 10, // Limit connection pool size
-  idle_timeout: 30, // Close idle connections after 30 seconds
+const dbUrl = process.env.DATABASE_URL;
+
+if (!dbUrl || dbUrl.trim() === '') {
+  const errorMsg = 'CRITICAL ERROR: DATABASE_URL is missing or empty. Please configure it in your environment variables.';
+  console.error(errorMsg);
+  // On server-side, this will show in Vercel Logs
+  throw new Error(errorMsg);
+}
+
+const sql = globalForSql.sql || postgres(dbUrl, {
+  max: 10,
+  idle_timeout: 30,
   connect_timeout: 30,
+  ssl: 'require', // Force SSL for Neon/Cloud DBs
 });
 
 if (process.env.NODE_ENV !== 'production') globalForSql.sql = sql;
