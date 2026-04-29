@@ -1,5 +1,4 @@
-import { NextResponse } from 'next/server';
-import type { NextRequest } from 'next/request';
+import { NextResponse, type NextRequest } from 'next/server';
 
 // Migrated from middleware to proxy convention as per Next.js deprecation notice
 export function proxy(request: NextRequest) {
